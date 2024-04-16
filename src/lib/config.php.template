@@ -1,0 +1,13 @@
+<?php
+$CONFIG['site_url']        = "set_me_up";
+$CONFIG['site_location']   = "set_me_up";
+$CONFIG['db_host']         = "set_me_up";
+$CONFIG['db_port']         = "3306";
+$CONFIG['database']        = "set_me_up";
+$CONFIG['db_user']         = "set_me_up";
+$CONFIG['db_password']     = "set_me_up";
+$CONFIG['db_charset']      = "utf8";
+$CONFIG['home_dir']        = "set_me_up";
+$CONFIG['file_descriptor'] = ".html";
+$CONFIG['log_level']       = 3;
+$CONFIG['log_file']        = "set_me_up";

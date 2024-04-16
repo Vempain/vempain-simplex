@@ -1,0 +1,135 @@
+<style>
+    #vempain-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        justify-items: center;
+        align-items: start;
+        background-color: rgba(90, 90, 90, 1.0);
+    }
+
+    #vempain-gallery a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        text-decoration: none;
+        position: relative;
+        margin: 20px;
+    }
+
+    #vempain-gallery img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
+    }
+
+    .item-description {
+        background-color: rgba(60, 60, 60, 0.5);
+        color: white;
+        padding: 10px;
+        margin-top: auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pswp__custom-caption {
+        background: rgba(50, 50, 50, 0.75);
+        font-size: 16px;
+        color: #fff;
+        width: calc(100% - 32px);
+        max-width: 400px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        position: absolute;
+        left: 50%;
+        bottom: 16px;
+        transform: translateX(-50%);
+    }
+
+    .pswp__custom-caption a {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .hidden-caption-content {
+        display: none;
+    }
+</style>
+<link rel='stylesheet' href='/photoswipe/photoswipe.css'>
+<script type='module'>
+	import PhotoSwipeLightbox from '/photoswipe/photoswipe-lightbox.esm.js';
+
+	fetch('/rest.php?rest=gallery&id={$galleryId}')
+		.then(response => response.json())
+		.then(jsonResponse => {
+			console.log('Response received:', jsonResponse);
+
+			const options = {
+				dataSource: jsonResponse,
+				showHideAnimationType: 'none',
+				gallery: '#vempain-gallery',
+				children: 'a',
+				pswpModule: () => import('/photoswipe/photoswipe.esm.js')
+			};
+
+			const lightbox = new PhotoSwipeLightbox(options);
+			lightbox.on('uiRegister', function () {
+				lightbox.pswp.ui.registerElement({
+					name: 'custom-caption',
+					order: 9,
+					isButton: false,
+					appendTo: 'root',
+					html: 'Caption text',
+					onInit: (el, pswp) => {
+						lightbox.pswp.on('change', () => {
+							const currSlideElement = lightbox.pswp.currSlide.data.element;
+							let captionHTML = '';
+							if (currSlideElement) {
+								const hiddenCaption = currSlideElement.querySelector('.hidden-caption-content');
+								if (hiddenCaption) {
+									captionHTML = hiddenCaption.innerHTML;
+								} else {
+									const captionText = currSlideElement.querySelector('img').getAttribute('alt');
+									if (captionText.length > 0) {
+                                        captionHTML = captionText;
+                                    } else {
+                                        captionHTML = '';
+                                    }
+								}
+							}
+							if (captionHTML !== null && captionHTML !== 'null') {
+								el.innerHTML = captionHTML;
+                            } else {
+                                el.innerHTML = '';
+                            }
+						});
+					}
+				});
+			});
+			lightbox.init();
+
+			const galleryContainer = document.querySelector('#vempain-gallery');
+
+			jsonResponse.forEach(item => {
+				const anchor = document.createElement('a');
+				anchor.href = item.src;
+				anchor.setAttribute('data-pswp-width', item.width);
+				anchor.setAttribute('data-pswp-height', item.height);
+				anchor.target = '_blank';
+
+				const image = document.createElement('img');
+				image.src = '.thumb/' + item.src;
+				image.alt = item.alt;
+
+				const description = document.createElement('div');
+				description.classList.add('item-description');
+				description.textContent = item.alt;
+
+				anchor.appendChild(image);
+				anchor.appendChild(description);
+				galleryContainer.appendChild(anchor);
+			});
+		})
+		.catch(error => console.error('Error fetching images:', error));
+</script>
+<div class='pswp-gallery pswp-gallery--single-column' id='vempain-gallery'></div>

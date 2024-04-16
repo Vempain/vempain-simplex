@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 1999-2018 Paul-Erik Törrönen, poltsi@poltsi.fi
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation version 2 and provided that the above
+ *  copyright and permission notice is included with all distributed
+ *  copies of this or derived software.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ */
+
+TABLE.keski {
+  margin-left: auto;
+  margin-right: auto }
+
+TABLE.edkeski {
+  margin-left: auto;
+  margin-right: auto;
+  border: 0 solid;
+  width: 99% }
+
+TR.edgrey {
+  background: #CCCCCC
+}
+
+TR.edheader {
+  background: #AAAAAA
+}
+
+TD.edheader {
+  background: #AAAAAA
+}
+
+TD.edgrey {
+  vertical-align: top
+}
+
+TD.keski {
+  text-align: center }
+
+INPUT.edtext {
+  width: 250px;
+  font-size: 12px }
+
+TEXTAREA.edtextarea {
+  width: 100%;
+  height: 550px;
+  font-size: 14px }
+
+IMG.keski {
+  display: block;
+  margin-left: auto;
+  margin-right: auto }
+
+P.keski {
+  text-align: center }
+
+H2.edkeski {
+  text-align: center }
+
+FONT.red {
+  color: #aa0000 }
+
+FONT.green {
+  color: #008800 }
+
+BODY.bw {
+  color: black;
+  background: white }

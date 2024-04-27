@@ -1,13 +1,67 @@
 <?php
+/**
+ * Site URL: the full URL of the site, e.g. https://www.example.com
+ */
 $CONFIG['site_url']        = "set_me_up";
+
+/**
+ * Site Location: the location of the site on the server filesystem, e.g. /var/www/html
+ */
 $CONFIG['site_location']   = "set_me_up";
+
+/**
+ * Database Host: the hostname of the database server, e.g. localhost
+ */
 $CONFIG['db_host']         = "set_me_up";
+
+/**
+ * Database Port: the port of the database server, e.g. 3306
+ */
 $CONFIG['db_port']         = "3306";
+
+/**
+ * Database Name: the name of the database, e.g. vempain_site
+ */
 $CONFIG['database']        = "set_me_up";
+
+/**
+ * Database User: the username to use when connecting to the database, e.g. vempain_site
+ */
 $CONFIG['db_user']         = "set_me_up";
+
+/**
+ * Database Password: the password to use when connecting to the database
+ */
 $CONFIG['db_password']     = "set_me_up";
+
+/**
+ * Database Charset: the character set to use when connecting to the database, e.g. utf8
+ * You should not change this unless you know what you are doing
+ */
 $CONFIG['db_charset']      = "utf8";
+
+/**
+ * Home Directory: Relative URL path where the site is located, e.g. /
+ */
 $CONFIG['home_dir']        = "set_me_up";
+
+/**
+ * File Descriptor: the file extension of the pages that are served by the site, e.g. .html
+ */
 $CONFIG['file_descriptor'] = ".html";
+
+/**
+ * Log Level: the level of logging to use, e.g. 3
+ * 0 = no logging
+ * 1 = errors only
+ * 2 = errors and warnings
+ * 3 = errors, warnings and information
+ * See lib_vempain.php V_LOG_* constants for more information
+ */
 $CONFIG['log_level']       = 3;
+
+/**
+ * Log File: the file to write log messages to, e.g. /var/log/vempain/error.log
+ * Make sure the web server has write permissions to this file as well as SELinux permissions
+ */
 $CONFIG['log_file']        = "set_me_up";

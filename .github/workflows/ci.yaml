@@ -1,0 +1,71 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+
+concurrency: build
+
+jobs:
+  package:
+    name: Create package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Get main and base version
+        id: basemain
+        shell: bash
+        run: |
+          baseVersion=$(cat VERSION)
+          mainVersion=$(echo ${baseVersion} | cut -d '.' -f 1)
+          echo "baseVersion=${baseVersion}" >> $GITHUB_OUTPUT
+          echo "mainVersion=${mainVersion}" >> $GITHUB_OUTPUT
+
+      - name: Generate new version
+        id: newVer
+        shell: bash
+        run: |
+          git fetch --tags origin
+          currentVersion=$(git tag --list --sort=-version:refname "${baseVersion}.*" | head -n 1 || "${baseVersion}.0")
+
+          if [ -z "${currentVersion}" ]; then
+            newVersion="${baseVersion}.0"
+          else
+            runningNumber=$(echo ${currentVersion} | cut -f 3 -d '.')
+            newVersion="${baseVersion}.$((${runningNumber} + 1))"
+          fi
+          echo "The generated new version is: ${newVersion}"
+          echo "newVersion=${newVersion}" >> $GITHUB_OUTPUT
+        env:
+          baseVersion: ${{ steps.basemain.outputs.baseVersion }}
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: "vempain-simplex-${{ steps.newVer.outputs.newVersion }}"
+          path: src/*
+          retention-days: 30
+          compression-level: 9
+          overwrite: true
+          if-no-files-found: error
+
+      - name: Create tag
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.TAG_CREATION_TOKEN }}
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.newVer.outputs.newVersion }}',
+              sha: context.sha
+            })

@@ -57,9 +57,9 @@
 </style>
 <link rel='stylesheet' href='/photoswipe/photoswipe.css'>
 <script type='module'>
-	import PhotoSwipeLightbox from '/photoswipe/photoswipe-lightbox.esm.js';
+    import PhotoSwipeLightbox from '/photoswipe/photoswipe-lightbox.esm.js';
 
-	fetch('/rest.php?rest=gallery&id={$galleryId}')
+    fetch('/rest.php?rest=gallery&id={$galleryId}')
 		.then(response => response.json())
 		.then(jsonResponse => {
 			console.log('Response received:', jsonResponse);
@@ -115,6 +115,7 @@
 				anchor.href = item.src;
 				anchor.setAttribute('data-pswp-width', item.width);
 				anchor.setAttribute('data-pswp-height', item.height);
+                anchor.setAttribute('data-cropped', 'true');
 				anchor.target = '_blank';
 
 				const image = document.createElement('img');

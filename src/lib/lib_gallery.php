@@ -55,21 +55,17 @@ function getGalleryData(int $id) {
 	global $CONFIG;
 	global $DB_HANDLE;
 
-	$sqlString = 'SELECT f.path, f.width, f.height, f.comment FROM file f, gallery_file gf WHERE gf.gallery_id = ? AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
-	$stmt      = mysqli_prepare($DB_HANDLE[$CONFIG['database']], $sqlString);
+	$sqlString = 'SELECT f.path, f.width, f.height, f.comment FROM file f, gallery_file gf WHERE gf.gallery_id = $1 AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
+	$result      = pg_query_params($DB_HANDLE[$CONFIG['database']], $sqlString, [$id]);
 
-	if ($stmt) {
-		mysqli_stmt_bind_param($stmt, 'd', $id);
-		mysqli_stmt_execute($stmt);
-		$result    = mysqli_stmt_get_result($stmt);
+	if ($result) {
 		$recordset = [];
 
-		while ($row = mysqli_fetch_assoc($result)) {
+		while ($row = pg_fetch_assoc($result)) {
 			$recordset[] = $row;
 		}
 
-		mysqli_free_result($result);
-		mysqli_stmt_close($stmt);
+		pg_free_result($result);
 
 		if (count($recordset) == 0) {
 			return false;

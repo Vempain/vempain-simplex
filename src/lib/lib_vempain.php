@@ -102,7 +102,9 @@ function writeToLog(int $level, string $message): bool
 function connectDB(string $handle, string $dbhost, int $dbport, string $dbase, string $dbuser, string $dbpassword): bool
 {
     global $DB_HANDLE;
-    $DB_HANDLE[$handle] = pg_connect("host=" . $dbhost . " port=" . $dbport . " dbname=" . $dbase . "user=" . $dbuser . " password=" . $dbpassword);
+	$connectionString = "host=" . $dbhost . " port=" . $dbport . " dbname=" . $dbase . " user=" . $dbuser . " password=" . $dbpassword;
+	writeToLog(V_LOG_DEBUG, "Connecting to database: " . $connectionString);
+    $DB_HANDLE[$handle] = pg_connect($connectionString);
 
     if (!$DB_HANDLE[$handle]) {
         return (false);
@@ -130,9 +132,9 @@ function convertDBString(string $req_string): string
 function fetchPage(string $handle = '', string $page_path = ''): array|bool
 {
     global $DB_HANDLE;
-    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p.`path`, p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published  
+    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p.path, p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published  
 				  FROM   page p
-				  WHERE  BINARY path = $1';
+				  WHERE  path = $1';
 
     // Prepare the statement
     $statement = pg_prepare($DB_HANDLE[$handle], "fetch_page", $sqlString);
@@ -157,7 +159,7 @@ function fetchPage(string $handle = '', string $page_path = ''): array|bool
 
         return $recordset[0];
     } else {
-        // Handle the error if the statement preparation fails
+        writeToLog(V_LOG_ERROR, "Failed to prepare statement: " . $sqlString);
         return false;
     }
 }
@@ -212,13 +214,13 @@ function getSQLArray(string $handle = '', string $sqlString = ''): bool|array
 
     $recordset = [];
 
-    $db_result = pg_execute($DB_HANDLE[$handle], $sqlString);
+    $db_result = pg_query($DB_HANDLE[$handle], $sqlString);
 
     if ($db_result) {
         $no_rows = pg_num_rows($db_result);
 
-        for ($idx = 0; $idx < $no_rows; ++$idx) {
-            $recordset[$idx] = pg_fetch_row($db_result);
+        while ($row = pg_fetch_assoc($db_result)) {
+            $recordset[] = $row;
         }
 
         pg_free_result($db_result);

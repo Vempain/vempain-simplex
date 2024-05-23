@@ -14,8 +14,7 @@ if (connectDB($CONFIG['database'],
               $CONFIG['db_port'],
               $CONFIG['database'],
               $CONFIG['db_user'],
-              $CONFIG['db_password'],
-              $CONFIG['db_charset'])) {
+              $CONFIG['db_password'])) {
 	$ARGS = readEnvVars();
 
 	$requestUri = urldecode((string)$ARGS['REQUEST_URI']);

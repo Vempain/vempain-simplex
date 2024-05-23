@@ -120,7 +120,7 @@ function convertDBString(string $req_string): string
 {
     writeToLog(V_LOG_DEBUG, "Called.");
 
-    $req_string = preg_replace("#\'#", "\\'", $req_string);
+    $req_string = preg_replace("#'#", "\\'", $req_string);
 
     return (preg_replace('#"#', "\\\"", $req_string));
 }
@@ -132,9 +132,7 @@ function convertDBString(string $req_string): string
 function fetchPage(string $handle = '', string $page_path = ''): array|bool
 {
     global $DB_HANDLE;
-    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p.path, p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published  
-				  FROM   page p
-				  WHERE  path = $1';
+    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p.path, p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published FROM page p WHERE  path = $1';
 
     // Prepare the statement
     $statement = pg_prepare($DB_HANDLE[$handle], "fetch_page", $sqlString);
@@ -169,7 +167,7 @@ function cachePage(string $handle, int $id, string $cache)
     global $DB_HANDLE;
 
     // Prepare the SQL statement
-    $sqlString = 'UPDATE page SET cache = ? WHERE id = ?';
+    $sqlString = 'UPDATE page SET cache = $1 WHERE id = $2';
     $statement = pg_prepare($DB_HANDLE[$handle], 'fetch_cache', $sqlString);
 
     if ($statement) {
@@ -217,8 +215,6 @@ function getSQLArray(string $handle = '', string $sqlString = ''): bool|array
     $db_result = pg_query($DB_HANDLE[$handle], $sqlString);
 
     if ($db_result) {
-        $no_rows = pg_num_rows($db_result);
-
         while ($row = pg_fetch_assoc($db_result)) {
             $recordset[] = $row;
         }

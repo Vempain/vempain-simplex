@@ -35,6 +35,12 @@ function showGallery(int $galleryId = 0) {
 function getGalleryJson(int $id) {
 	$galleryData = getGalleryData($id);
 
+    if ($galleryData === false) {
+        header('Content-Type: application/json');
+        echo json_encode([]);
+        return;
+    }
+
 	for ($i = 0; $i < count($galleryData); $i++) {
 		$data[] = [
 			'src'    => $galleryData[$i]['path'],
@@ -55,7 +61,7 @@ function getGalleryData(int $id) {
 	global $CONFIG;
 	global $DB_HANDLE;
 
-	$sqlString = 'SELECT f.path, f.width, f.height, f.comment FROM file f, gallery_file gf WHERE gf.gallery_id = $1 AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
+	$sqlString = 'SELECT f.path, f.width, f.height, f.comment FROM file f, gallery_file gf, gallery g WHERE g.gallery_id = $1 AND gf.gallery_id = g.id AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
 	$result      = pg_query_params($DB_HANDLE[$CONFIG['database']], $sqlString, [$id]);
 
 	if ($result) {

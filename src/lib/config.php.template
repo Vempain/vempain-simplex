@@ -17,7 +17,7 @@ $CONFIG['db_host']         = "set_me_up";
 /**
  * Database Port: the port of the database server, e.g. 3306
  */
-$CONFIG['db_port']         = "3306";
+$CONFIG['db_port']         = "5432";
 
 /**
  * Database Name: the name of the database, e.g. vempain_site

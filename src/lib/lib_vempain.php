@@ -132,8 +132,7 @@ function convertDBString(string $req_string): string
 function fetchPage(string $handle = '', string $page_path = ''): array|bool
 {
     global $DB_HANDLE;
-    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p.path, p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published FROM page p WHERE  path = $1';
-
+    $sqlString = 'SELECT p.id, p.body, p.cache, p.indexlist, p."path", p.secure, p.header, p.title, p.creator, p.created, p.modifier, p.modified, p.published FROM "page" p WHERE  p."path" = $1';
     // Prepare the statement
     $statement = pg_prepare($DB_HANDLE[$handle], "fetch_page", $sqlString);
 

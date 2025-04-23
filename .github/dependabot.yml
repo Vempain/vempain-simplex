@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: /
+    registries: "*"
     schedule:
-      interval: "weekly"
+      interval: weekly
+    open-pull-requests-limit: 15
+    groups:
+      dependencies:
+        update-types:
+          - minor
+          - patch
+          - major

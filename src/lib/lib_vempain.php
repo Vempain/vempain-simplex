@@ -225,6 +225,37 @@ function getSQLArray(string $handle = '', string $sqlString = ''): bool|array
     return (false);
 }
 
+function getPreparedStatementSql(string $statementName, string $handle = '', string $sqlString = '', array $params = []): bool|array
+{
+    global $DB_HANDLE;
+
+    if ($handle === '') {
+        return false;
+    }
+
+    if ($sqlString === '') {
+        return false;
+    }
+
+    $recordset = [];
+
+    pg_prepare($DB_HANDLE[$handle], $statementName, $sqlString);
+
+    $db_result = pg_execute($DB_HANDLE[$handle], $statementName, $params);
+
+    if ($db_result) {
+        while ($row = pg_fetch_assoc($db_result)) {
+            $recordset[] = $row;
+        }
+
+        pg_free_result($db_result);
+        return $recordset;
+    }
+
+    return false;
+}
+
+
 /**
  * Execute an SQL query with parameters and return the result set as an array.
  *

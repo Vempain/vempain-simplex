@@ -62,7 +62,7 @@ jobs:
       - name: Create tag
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.TAG_CREATION_TOKEN }}
+          github-token: ${{ secrets.VEMPAIN_ACTION_TOKEN }}
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,

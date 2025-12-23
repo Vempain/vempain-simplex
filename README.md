@@ -1,3 +1,7 @@
+# NOTE! This repository is now archived
+
+This piece of software has now been replaced by the new [Vempain Website (VWS)](https://github.com/Vempain/vempain-website).
+
 # Vempain Simplex
 
 Vempain Simplex is a web site application used to display the web pages created and maintained by the Vempain Admin system.

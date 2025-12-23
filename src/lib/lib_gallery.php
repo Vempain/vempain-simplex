@@ -61,7 +61,8 @@ function getGalleryData(int $id) {
 	global $CONFIG;
 	global $DB_HANDLE;
 
-	$sqlString = 'SELECT f.path, f.width, f.height, f.comment FROM file f, gallery_file gf, gallery g WHERE g.gallery_id = $1 AND gf.gallery_id = g.id AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
+    $sqlString =
+        'SELECT f.path, f.width, f.height, f.comment FROM web_site_file f, web_site_gallery_file gf, web_site_gallery g WHERE g.gallery_id = $1 AND gf.gallery_id = g.id AND gf.file_id = f.id ORDER BY gf.sort_order ASC';
 	$result      = pg_query_params($DB_HANDLE[$CONFIG['database']], $sqlString, [$id]);
 
 	if ($result) {

@@ -25,7 +25,7 @@ function getSubjectByFileID(array $fileIDArr = []): bool|array {
 
 	if (is_array($fileIDArr) && count($fileIDArr)) {
 		$sqlString = 'SELECT DISTINCT s.subject ' .
-		             'FROM file_subject fs, subject s ' .
+                     'FROM web_site_file_subject fs, subject s ' .
 		             'WHERE fs.subject_id = s.subject_id AND fs.file_id IN (' . implode(',', $fileIDArr) . ')';
 		$rs        = getSQLArray($CONFIG['database'], $sqlString);
 
@@ -86,11 +86,11 @@ function getFileIdBySubject(array|string $subjects): array {
 
 	for ($idx = 0; $idx < $subCount; ++$idx) {
 		writeToLog(V_LOG_DEBUG, 'Round ' . $idx);
-		$joinTables[] = 'subject s' . $idx;
+        $joinTables[] = 'web_site_subject s' . $idx;
 
 		// Skip the first round on these
 		if ($idx !== 0) {
-			$joinJoinTables[] = 'file_subject fs' . $idx;
+            $joinJoinTables[] = 'web_site_file_subject fs' . $idx;
 			$joinJoinOn[]     = 'fs0.file_id = fs' . $idx . '.file_id';
 		} else {
 			writeToLog(V_LOG_DEBUG, 'Skipping on ' . $idx);
@@ -108,7 +108,7 @@ function getFileIdBySubject(array|string $subjects): array {
 	             'DISTINCT ' .
 	             'fc.id AS fcfid ' .
 	             'FROM ' .
-	             'file fc, ' .
+                 'web_site_file fc, ' .
 	             implode(', ', $joinTables) . ', ' .
 	             'file_subject fs0 LEFT JOIN ( ' .
 	             implode(', ', $joinJoinTables) . ' ) ON ' .
@@ -141,7 +141,7 @@ function getFileIdBySubjectId(array $subject): array {
 	writeToLog(V_LOG_DEBUG, 'Called');
 
 	/* Do the search */
-	$sqlString = 'SELECT DISTINCT file_id FROM file_subject WHERE subject_id IN ( ' . implode(',', $subject) . ' )';
+    $sqlString = 'SELECT DISTINCT file_id FROM web_site_file_subject WHERE subject_id IN ( ' . implode(',', $subject) . ' )';
 
 	$rs = getSQLArray($CONFIG['database'], $sqlString);
 	foreach ($rs as $r) {
@@ -186,9 +186,9 @@ function getSubjectId(bool|array|string $subject = false): bool|array {
 			$subject[$key] = convertDBString($val);
 		}
 
-		$sqlString = 'SELECT DISTINCT subject_id FROM subject WHERE subject IN ( "' . implode('", "', $subject) . '" )';
+        $sqlString = 'SELECT DISTINCT web_site_subject_id FROM subject WHERE subject IN ( "' . implode('", "', $subject) . '" )';
 	} elseif (is_string($subject) && trim($subject) !== '') {
-		$sqlString = 'SELECT DISTINCT subject_id FROM subject WHERE subject = "' . convertDBString($subject) . '"';
+        $sqlString = 'SELECT DISTINCT web_site_subject_id FROM subject WHERE subject = "' . convertDBString($subject) . '"';
 	} else {
 		writeToLog(V_LOG_ERROR, 'Received something that is not a string or array: "' . $subject . '"');
 		return (false);
